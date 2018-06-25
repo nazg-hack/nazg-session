@@ -38,7 +38,7 @@ class CacheSessionHandler implements SessionHandlerInterface {
   }
 
   public function gc(string $lifetime): bool {
-    return true;
+    return $this->cache->flushAll();
   }
 
   public function getCache(): CacheProvider {
