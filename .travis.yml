@@ -1,0 +1,20 @@
+
+language: php
+sudo: required
+dist: trusty
+php:
+ - hhvm-3.25
+ - hhvm-3.26
+ - hhvm-3.27 
+ - hhvm
+ - hhvm-nightly
+ 
+services:
+ - memcached
+ - redis
+
+install: composer install
+
+script:
+ - hh_client
+ - hhvm vendor/bin/phpunit

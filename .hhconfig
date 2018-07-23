@@ -1,2 +1,2 @@
-assume_php=true
+assume_php=false
 ignored_paths = [ "vendor/.+/tests/.+", "vendor/hhvm/hhast/.+" ]
