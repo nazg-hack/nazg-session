@@ -18,23 +18,26 @@
 
 namespace Nazg\HSession;
 
-use SessionHandlerInterface;
-use function array_merge;
+use type SessionHandlerInterface;
+use function unserialize;
+use function serialize;
+use function is_null;
+use function is_array;
 
 type SessionAttributes = Map<string, mixed>;
 
 class Repository {
-  
+
   protected SessionAttributes $attributes = Map {};
-  
+
   protected bool $started = false;
 
   public function __construct(
-    protected string $name, 
-    protected SessionHandlerInterface $handler, 
+    protected string $name,
+    protected SessionHandlerInterface $handler,
     protected ?string $id = null
   ) {
-    //$this->setId($id);
+    $this->setId($id);
   }
 
   public function start(): bool {
@@ -43,17 +46,17 @@ class Repository {
   }
 
   protected function loadSession(): void {
-    $this->attributes = array_merge($this->attributes, $this->readFromHandler());
+    $this->attributes = $this->readFromHandler();
   }
 
-  protected function readFromHandler(): mixed {
+  protected function readFromHandler(): Map<string, mixed> {
     if ($data = $this->handler->read($this->getId())) {
-      $data = @\unserialize($this->prepareForUnserialize($data));
-      if ($data !== false && ! \is_null($data) && is_array($data)) {
-        return $data;
+      $data = @unserialize($this->prepareForUnserialize($data));
+      if ($data !== false && ! is_null($data) && is_array($data)) {
+        return new Map($data);
       }
     }
-      return [];
+    return Map{ };
   }
 
   protected function prepareForUnserialize(string $data): string {
@@ -62,9 +65,9 @@ class Repository {
 
   public function save(): void {
     $this->handler->write(
-      $this->getId(), 
+      $this->getId(),
       $this->prepareForStorage(
-        \serialize($this->attributes)
+        serialize($this->attributes->toArray())
       )
     );
     $this->started = false;
@@ -163,12 +166,12 @@ class Repository {
   /**
    * Set the session ID.
    */
-  public function setId(string $id): void {
+  public function setId(?string $id): void {
     $this->id = $this->isValidId($id) ? $id : $this->generateSessionId();
   }
 
 
-  public function isValidId(string $id): bool {
+  public function isValidId(?string $id): bool {
     return \is_string($id) && \ctype_alnum($id) && \strlen($id) === 40;
   }
 

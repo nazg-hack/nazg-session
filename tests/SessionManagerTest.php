@@ -1,14 +1,41 @@
 <?hh // strict
 
-use PHPUnit\Framework\TestCase;
-use Nazg\HSession\SessionManager;
-use Nazg\HSession\Repository;
+use type PHPUnit\Framework\TestCase;
+use type Nazg\HSession\SessionManager;
+use type Nazg\HSession\Repository;
 
 class SessionManagerTest extends TestCase {
-  
-  public function testShouldReturn(): void {
+
+  public function testShouldReturnSessionProvider(): void {
     $manager = new SessionManager();
     $repository = $manager->create('map', 0);
     $this->assertInstanceOf(Repository::class, $repository);
+  }
+
+  public function testShouldReturnValues(): void {
+    $manager = new SessionManager();
+    $repository = $manager->create('map', 0);
+    $this->assertFalse($repository->has('testing'));
+
+    $repository->start();
+    $repository->put('testing', 'hhvm');
+    $this->assertTrue($repository->has('testing'));
+    $this->assertSame('hhvm', $repository->get('testing'));
+    $repository->save();
+    $this->assertTrue($repository->has('testing'));
+    $this->assertSame('hhvm', $repository->get('testing'));
+  }
+
+  public function testShouldReturnNull(): void {
+    $manager = new SessionManager();
+    $repository = $manager->create('map', 0);
+    $this->assertFalse($repository->has('testing'));
+    $repository->start();
+    $repository->put('testing', 'hhvm');
+    $this->assertTrue($repository->has('testing'));
+    $this->assertSame('hhvm', $repository->get('testing'));
+    $repository->flush();
+    $this->assertFalse($repository->has('testing'));
+    $this->assertNull($repository->get('testing'));
   }
 }

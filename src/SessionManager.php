@@ -18,12 +18,16 @@
 
 namespace Nazg\HSession;
 
-use Nazg\HCache\CacheProvider;
-use Nazg\HSession\Exception\SessionDriverNameExistsException;
-use SessionHandlerInterface;
+use type Nazg\HCache\CacheProvider;
+use type Nazg\HSession\Exception\SessionDriverNameExistsException;
+use type SessionHandlerInterface;
 
+use function is_null;
+use function call_user_func_array;
+
+<<__ConsistentConstruct>>
 class SessionManager {
-  
+
   protected Map<string, classname<CacheProvider>> $cacheHandler = Map {
     'apc' => \Nazg\HCache\Driver\ApcCache::class,
     'void' => \Nazg\HCache\Driver\VoidCache::class,
@@ -33,26 +37,61 @@ class SessionManager {
     'redis' => \Nazg\HCache\Driver\RedisCache::class,
   };
 
+  protected Map<string, (function(CacheProvider): CacheProvider)> $cacheConfigure = Map{};
   protected Map<string, (function():SessionHandlerInterface)> $userSession = Map{};
 
-  
+  public function __construct(
+    protected ?string $sessionId = null
+  ) { }
+
   public function create(string $namedSession, int $minutes): Repository {
     $handler = $this->setHandler(
       $this->buildSession($namedSession, $minutes)
     );
-    return new Repository($namedSession, $handler);
+    return new Repository($namedSession, $handler, $this->sessionId);
+  }
+
+  public function configInjector(
+    string $name,
+    (function(CacheProvider): CacheProvider) $callback
+  ): void {
+    $this->cacheConfigure->add(Pair{$name, $callback});
   }
 
   protected function buildSession(string $namedSession, int $minutes): SessionHandlerInterface {
     if($this->cacheHandler->contains($namedSession)) {
       $session = $this->cacheHandler->at($namedSession);
-      return new CacheSessionHandler(new $session(), $minutes);
+      $instance = new $session();
+      if($this->cacheConfigure->contains($namedSession)) {
+        $callback = $this->cacheConfigure->get($namedSession);
+        if(!is_null($callback)) {
+          $instance = $this->callbackCacheInstance($instance, $callback);
+        }
+      }
+      return new CacheSessionHandler($instance, $minutes);
     }
     if($this->userSession->contains($namedSession)) {
       $session = $this->userSession->at($namedSession);
       return $session();
     }
     throw new SessionDriverNameExistsException();
+  }
+
+  protected function callbackCacheInstance<T>(
+    T $provider,
+    (function(CacheProvider): CacheProvider) $callback
+  ): T {
+    return call_user_func_array($callback, [$provider]);
+  }
+
+  public function addCustomSession(
+    string $name,
+    (function():SessionHandlerInterface) $session
+  ): void {
+    $this->userSession->add(Pair{$name, $session});
+    if($this->userSession->contains($name)) {
+      $this->userSession->remove($name);
+    }
   }
 
   protected function setHandler(SessionHandlerInterface $handler): SessionHandlerInterface {

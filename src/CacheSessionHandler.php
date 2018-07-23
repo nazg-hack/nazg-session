@@ -1,4 +1,4 @@
-<?hh 
+<?hh
 
 /**
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -18,18 +18,18 @@
 
 namespace Nazg\HSession;
 
-use Nazg\HCache\Element;
-use Nazg\HCache\CacheProvider;
-use SessionHandlerInterface;
+use type Nazg\HCache\Element;
+use type Nazg\HCache\CacheProvider;
+use type SessionHandlerInterface;
 
-class CacheSessionHandler implements SessionHandlerInterface {
+class CacheSessionHandler implements \SessionHandlerInterface {
 
   public function __construct(
-    protected CacheProvider $cache, 
+    protected CacheProvider $cache,
     protected int $minutes
   ) {}
 
-  public function open($savePath, $sessionName): bool {
+  public function open($_savePath, $_sessionName): bool {
     return true;
   }
 
@@ -46,14 +46,14 @@ class CacheSessionHandler implements SessionHandlerInterface {
   }
 
   public function write($sessionId, $data): bool {
-    return $this->cache->save($sessionId, $data);
+    return $this->cache->save($sessionId, new Element($data, $this->minutes));
   }
 
   public function destroy($sessionId): bool {
     return $this->cache->delete($sessionId);
   }
 
-  public function gc($lifetime): bool {
+  public function gc($_lifetime): bool {
     return $this->cache->flushAll();
   }
 
