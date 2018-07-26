@@ -2,14 +2,14 @@
 
 use type PHPUnit\Framework\TestCase;
 use type Nazg\HSession\SessionManager;
-use type Nazg\HSession\Repository;
+use type Nazg\HSession\Store;
 
 class SessionManagerTest extends TestCase {
 
   public function testShouldReturnSessionProvider(): void {
     $manager = new SessionManager();
     $repository = $manager->create('map', 0);
-    $this->assertInstanceOf(Repository::class, $repository);
+    $this->assertInstanceOf(Store::class, $repository);
   }
 
   public function testShouldReturnValues(): void {

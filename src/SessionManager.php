@@ -44,11 +44,11 @@ class SessionManager {
     protected ?string $sessionId = null
   ) { }
 
-  public function create(string $namedSession, int $minutes): Repository {
+  public function create(string $namedSession, int $minutes): Store {
     $handler = $this->setHandler(
       $this->buildSession($namedSession, $minutes)
     );
-    return new Repository($namedSession, $handler, $this->sessionId);
+    return new Store($namedSession, $handler, $this->sessionId);
   }
 
   public function configInjector(

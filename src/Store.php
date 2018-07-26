@@ -26,7 +26,7 @@ use function is_array;
 
 type SessionAttributes = Map<string, mixed>;
 
-class Repository {
+class Store {
 
   protected SessionAttributes $attributes = Map {};
 
@@ -41,7 +41,18 @@ class Repository {
   }
 
   public function start(): bool {
+    if($this->isStarted()) {
+      return true;
+    }
     $this->loadSession();
+
+    if (\session_status() === \PHP_SESSION_ACTIVE) {
+      throw new \RuntimeException('Session was already started');
+    }
+
+    if (!\session_start()) {
+      throw new \RuntimeException('Could not start the session');
+    }
     return $this->started = true;
   }
 
@@ -121,6 +132,15 @@ class Repository {
     return $this->attributes->removeKey($key);
   }
 
+  public function destroy(): void {
+    if (\session_status() === \PHP_SESSION_ACTIVE) {
+      \session_destroy();
+    }
+    $this->attributes->clear();
+    $_SESSION = [];
+    $this->started = false;
+  }
+
   /**
    * Remove many items from session.
    */
@@ -148,7 +168,7 @@ class Repository {
   }
 
   public function isStarted(): bool {
-    return $this->started;
+    return $this->started || \session_status() === \PHP_SESSION_ACTIVE;
   }
 
   public function getName(): string {
@@ -167,7 +187,11 @@ class Repository {
    * Set the session ID.
    */
   public function setId(?string $id): void {
-    $this->id = $this->isValidId($id) ? $id : $this->generateSessionId();
+    if ($id !== null && !\headers_sent()) {
+      $id = $this->isValidId($id) ? $id : $this->generateSessionId();
+      \session_id($id);
+    }
+    $this->id = \session_id();
   }
 
 

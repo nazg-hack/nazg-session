@@ -2,13 +2,13 @@
 
 use type PHPUnit\Framework\TestCase;
 use type Nazg\HSession\SessionManager;
-use type Nazg\HSession\Repository;
+use type Nazg\HSession\Store;
 use type Nazg\HCache\CacheProvider;
 use type Nazg\HCache\Driver\MemcachedCache;
 
 final class MemcachedDriverTest extends TestCase {
 
-  private ?Repository $repository;
+  private ?Store $repository;
 
   <<__Override>>
   protected function setUp(): void {

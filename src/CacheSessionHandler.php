@@ -20,7 +20,6 @@ namespace Nazg\HSession;
 
 use type Nazg\HCache\Element;
 use type Nazg\HCache\CacheProvider;
-use type SessionHandlerInterface;
 
 class CacheSessionHandler implements \SessionHandlerInterface {
 
