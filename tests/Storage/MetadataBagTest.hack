@@ -47,8 +47,8 @@ final class MetadataBagTest extends HackTest {
     $bag3 = new MetadataBag();
     $bag3->initialize(inout $sessionMetadata);
     expect($bag1->getCreated())->toEqual($bag3->getCreated());
-    expect($bag2->getLastUsed())->toEqual($bag3->getLastUsed());
-    expect($bag3->getCreated())->toEqual($bag3->getLastUsed());
+    expect($bag3->getLastUsed())->toBeGreaterThan($bag2->getLastUsed());
+    expect($bag3->getCreated())->toNotEqual($bag3->getLastUsed());
   }
   
   public async function testGetSetName(): Awaitable<void> {
@@ -104,8 +104,6 @@ final class MetadataBagTest extends HackTest {
     ];
     $bag->initialize(inout $sessionMetadata);
     expect($sessionMetadata[Metadata::UPDATED])
-      ->toEqual($created);
-    expect($sessionMetadata[Metadata::UPDATED])
-      ->toNotEqual($timeStamp);
+      ->toEqual($timeStamp);
   }
 }
