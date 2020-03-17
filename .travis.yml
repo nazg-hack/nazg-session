@@ -1,20 +1,24 @@
-
-language: php
 sudo: required
-dist: trusty
-php:
- - hhvm-3.25
- - hhvm-3.26
- - hhvm-3.27 
- - hhvm
- - hhvm-nightly
- 
+language: generic
 services:
- - memcached
- - redis
-
-install: composer install
-
+- docker
+env:
+  matrix:
+    - HHVM_VERSION=4.35.0
+    - HHVM_VERSION=4.36.0
+    - HHVM_VERSION=4.38.0
+    - HHVM_VERSION=4.39.0
+    - HHVM_VERSION=4.40.0
+    - HHVM_VERSION=4.41.0
+    - HHVM_VERSION=4.42.0
+    - HHVM_VERSION=4.43.0
+    - HHVM_VERSION=4.44.0
+    - HHVM_VERSION=4.45.0
+    - HHVM_VERSION=4.46.0
+    - HHVM_VERSION=4.47.0
+    - HHVM_VERSION=4.48.0
+    - HHVM_VERSION=latest
+install:
+  - docker pull hhvm/hhvm:$HHVM_VERSION
 script:
- - hh_client
- - hhvm vendor/bin/phpunit
+  - docker run --rm -w /var/source -v $(pwd):/var/source hhvm/hhvm:$HHVM_VERSION ./.travis.sh
