@@ -32,6 +32,7 @@ class MetadataBag implements SessionBagInterface {
         if ($timeStamp - $dict[Metadata::UPDATED] >= $this->updateThreshold) {
           $this->meta[Metadata::UPDATED] = $timeStamp;
         }
+        $dict = $this->meta;
         return;
     }
     $this->stampCreated();
