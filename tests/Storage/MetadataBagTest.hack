@@ -50,7 +50,7 @@ final class MetadataBagTest extends HackTest {
     expect($bag3->getLastUsed())->toBeGreaterThan($bag2->getLastUsed());
     expect($bag3->getCreated())->toNotEqual($bag3->getLastUsed());
   }
-  
+
   public async function testGetSetName(): Awaitable<void> {
     expect($this->bag->getName())->toEqual('__metadata');
     $this->bag->setName('foo');

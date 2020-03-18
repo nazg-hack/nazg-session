@@ -1,7 +1,6 @@
 namespace Nazg\Session;
 
 interface SessionBagInterface {
-  
   /**
    * Gets this bag's name.
    */
@@ -11,7 +10,7 @@ interface SessionBagInterface {
    * Initializes the Bag.
    */
   public function initialize(
-    inout dict<Metadata, int> $dict
+    inout dict<arraykey, mixed> $dict
   ): void;
 
   /**
@@ -22,5 +21,5 @@ interface SessionBagInterface {
   /**
    * Clears out data from bag.
    */
-  public function clear(): void;
+  public function clear(): mixed;
 }
