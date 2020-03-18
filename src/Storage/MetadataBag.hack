@@ -1,7 +1,6 @@
 namespace Nazg\Session\Storage;
 
-use type Nazg\Session\SessionBagInterface;
-use type Nazg\Session\Metadata;
+use type Nazg\Session\{Metadata, SessionBagInterface};
 
 use function time;
 use function array_key_exists;
@@ -11,7 +10,7 @@ class MetadataBag implements SessionBagInterface {
   private string $name = '__metadata';
   private int $lastUsed = 0;
 
-  protected dict<Metadata, int> $meta = dict[
+  protected dict<arraykey, mixed> $meta = dict[
     Metadata::CREATED => 0,
     Metadata::UPDATED => 0,
     Metadata::LIFETIME => 0,
@@ -23,13 +22,15 @@ class MetadataBag implements SessionBagInterface {
   ) {}
 
   public function initialize(
-    inout dict<Metadata, int> $dict
+    inout dict<arraykey, mixed> $dict
   ): void {
     $this->meta = $dict;
     if (array_key_exists(Metadata::CREATED, $dict)) {
-        $this->lastUsed = $this->meta[Metadata::UPDATED];
+        $update = $this->meta[Metadata::UPDATED];
+        $update as int;
+        $this->lastUsed = $update;
         $timeStamp = time();
-        if ($timeStamp - $dict[Metadata::UPDATED] >= $this->updateThreshold) {
+        if ($timeStamp - $update >= $this->updateThreshold) {
           $this->meta[Metadata::UPDATED] = $timeStamp;
         }
         $dict = $this->meta;
@@ -40,7 +41,7 @@ class MetadataBag implements SessionBagInterface {
   }
 
   public function getLifetime(): int {
-    return $this->meta[Metadata::LIFETIME];
+    return $this->meta[Metadata::LIFETIME] as int;
   }
 
   public function stampNew(int $lifetime = 0): void {
@@ -52,7 +53,7 @@ class MetadataBag implements SessionBagInterface {
   }
 
   public function getCreated(): int {
-    return $this->meta[Metadata::CREATED];
+    return $this->meta[Metadata::CREATED] as int;
   }
 
   public function getLastUsed(): int {
