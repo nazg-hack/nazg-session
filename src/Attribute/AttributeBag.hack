@@ -30,18 +30,18 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate<mixed>, 
     return $this->storageKey;
   }
 
-  public function has(arraykey $name): bool {
+  public function has(string $name): bool {
     return array_key_exists($name, $this->attributes);
   }
 
   public function get(
-    arraykey $name,
+    string $name,
     mixed $default = null
   ): mixed {
     return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : $default;
   }
 
-  public function set(arraykey $name, mixed $value): void {
+  public function set(string $name, mixed $value): void {
     $this->attributes[$name] = $value;
   }
 
@@ -50,7 +50,7 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate<mixed>, 
   }
 
   public function replace(
-    dict<arraykey, mixed> $attributes
+    dict<string, mixed> $attributes
   ): void {
     $this->attributes = dict[];
     foreach ($attributes as $key => $value) {

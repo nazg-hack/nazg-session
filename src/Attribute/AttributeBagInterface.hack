@@ -7,17 +7,17 @@ interface AttributeBagInterface extends SessionBagInterface {
   /**
    * Checks if an attribute is defined.
    */
-  public function has(arraykey $name): bool;
+  public function has(string $name): bool;
 
   /**
    * Returns an attribute.
    */
-  public function get(arraykey $name, mixed $default = null): mixed;
+  public function get(string $name, mixed $default = null): mixed;
 
   /**
    * Sets an attribute.
    */
-  public function set(arraykey $name, mixed $value): void;
+  public function set(string $name, mixed $value): void;
 
   /**
    * Returns attributes.
@@ -25,7 +25,7 @@ interface AttributeBagInterface extends SessionBagInterface {
   public function all(): dict<arraykey, mixed>;
 
   public function replace(
-    dict<arraykey, mixed> $attributes
+    dict<string, mixed> $attributes
   ): void;
 
   /**

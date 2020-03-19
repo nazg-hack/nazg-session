@@ -1,7 +1,6 @@
 use type Nazg\Session\Attribute\AttributeBag;
-use type Facebook\HackTest\HackTest;
+use type Facebook\HackTest\{DataProvider, HackTest};
 use function Facebook\FBExpect\expect;
-use namespace HH\Lib\Dict;
 
 final class AttributeBagTest extends HackTest {
 
@@ -69,6 +68,22 @@ final class AttributeBagTest extends HackTest {
       vec['bye', null, false],
       vec['bye/for/now', null, false],
     ];
+  }
+
+  <<DataProvider('attributesProvider')>>
+  public function testHas(string $key, mixed $_, bool $exists): void {
+    expect($this->bag->has($key))->toEqual($exists);
+  }
+
+  <<DataProvider('attributesProvider')>>
+  public function testGet(string $key, mixed $value, bool $_): void {
+    expect($this->bag->get($key))->toEqual($value);
+  }
+
+  <<DataProvider('attributesProvider')>>
+  public function testSet(string $key, mixed $value, bool $_): void {
+    $this->bag->set($key, $value);
+    expect($this->bag->get($key))->toEqual($value);
   }
 
   public async function testAll(): Awaitable<void> {
