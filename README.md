@@ -1,3 +1,3 @@
-# Nazg\HSession
+# Nazg\Session
 
-WIP
+[mezzio-session](https://github.com/mezzio/mezzio-session) converted for Hack.
