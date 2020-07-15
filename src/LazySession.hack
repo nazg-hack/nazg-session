@@ -96,7 +96,7 @@ final class LazySession implements
 
   public function getSessionLifetime(): int {
     $proxiedSession = $this->getProxiedSession();
-    return $proxiedSession is SessionCookiePersistenceInterface 
+    return $proxiedSession is SessionCookiePersistenceInterface
       ? $proxiedSession->getSessionLifetime() : 0;
   }
 

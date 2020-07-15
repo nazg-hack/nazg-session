@@ -1,9 +1,7 @@
 namespace Nazg\Session;
 
-use type Nazg\Session\LazeSession;
 use type HH\Lib\IO\CloseableWriteHandle;
-use type Facebook\Experimental\Http\Message\ResponseInterface;
-use type Facebook\Experimental\Http\Message\ServerRequestInterface;
+use type Facebook\Experimental\Http\Message\{ResponseInterface, ServerRequestInterface};
 use namespace Nazg\Http\Server;
 
 class AsyncSessionMiddleware implements Server\AsyncMiddlewareInterface {
@@ -24,6 +22,6 @@ class AsyncSessionMiddleware implements Server\AsyncMiddlewareInterface {
       $writeHandle,
       $request->withServerParams(dict[self::SESSION_ATTRIBUTE => \serialize($session)])
     );
-    return $this->persistence->persistSession($session, $response);
+    return await $this->persistence->persistSessionAsync($session, $response);
   }
 }

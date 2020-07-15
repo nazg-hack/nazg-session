@@ -1,7 +1,6 @@
 namespace Nazg\Session;
 
-use type Facebook\Experimental\Http\Message\ResponseInterface;
-use type Facebook\Experimental\Http\Message\ServerRequestInterface;
+use type Facebook\Experimental\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 interface SessionPersistenceInterface {
   /**
@@ -17,8 +16,8 @@ interface SessionPersistenceInterface {
    * Persists the session data, returning a response instance with any
    * artifacts required to return to the client.
    */
-  public function persistSession(
+  public function persistSessionAsync(
     SessionInterface $session,
     ResponseInterface $response
-  ): ResponseInterface;
+  ): Awaitable<ResponseInterface>;
 }

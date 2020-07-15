@@ -7,8 +7,7 @@ use function json_encode;
 
 use const JSON_PRESERVE_ZERO_FRACTION;
 
-class Session implements 
-  SessionCookiePersistenceInterface,
+class Session implements SessionCookiePersistenceInterface,
   SessionIdentifierAwareInterface,
   SessionInterface {
 
@@ -36,7 +35,7 @@ class Session implements
   public static function extractSerializableValue(mixed $value): mixed {
     return json_decode(json_encode($value, JSON_PRESERVE_ZERO_FRACTION), true);
   }
-  
+
   <<__Rx>>
   public function toDict(): dict<arraykey, mixed> {
     return $this->data;

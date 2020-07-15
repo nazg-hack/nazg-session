@@ -1,8 +1,10 @@
 namespace Nazg\Session\Exception;
 
 use namespace HH\Lib\Str;
-use type Nazg\Session\InitializePersistenceIdInterface;
-use type Nazg\Session\SessionPersistenceInterface;
+use type Nazg\Session\{
+  InitializePersistenceIdInterface,
+  SessionPersistenceInterface,
+};
 use type RuntimeException;
 use function get_class;
 

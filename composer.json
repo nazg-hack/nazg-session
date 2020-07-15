@@ -21,12 +21,15 @@
     "hhvm/hhvm-autoload": "^3.0",
     "hhvm/hsl": "^4.0",
     "hhvm/hsl-experimental": "^4.50",
-    "nazg/http-server-request-handler": "^0.6.0"
+    "nazg/http-server-request-handler": "^0.6.0",
+    "ytake/extended-hack-http-request": "^0.1.2"
   },
   "require-dev": {
-    "hhvm/hacktest": "^2.0",
     "facebook/fbexpect": "^2.7",
-    "hhvm/hhast": "^4.0"
+    "hhvm/hacktest": "^2.0",
+    "hhvm/hhast": "^4.0",
+    "nazg/hcache": "^0.6.1",
+    "ytake/hack-cookie": "^0.1.1"
   },
   "autoload": {
     "psr-4": {

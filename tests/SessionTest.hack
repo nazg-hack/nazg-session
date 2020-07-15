@@ -1,4 +1,4 @@
-use type Nazg\Session\Session;
+use type Nazg\Session\{Session, SessionCookiePersistenceInterface};
 use type Facebook\HackTest\HackTest;
 use function Facebook\FBExpect\expect;
 
@@ -49,5 +49,14 @@ final class SessionTest extends HackTest {
     $session->clear();
     expect($original)->toNotBeSame($session->toDict());
     expect(dict[])->toBeSame($session->toDict());
+  }
+
+  public function testPersistingSessionCookieLifetimeSetsLifetimeKeyInSessionData(): void {
+    $session = new Session(dict[]);
+    $session->persistSessionFor(60);
+    expect($session->has(SessionCookiePersistenceInterface::SESSION_LIFETIME_KEY))
+      ->toBeTrue();
+    expect($session->get(SessionCookiePersistenceInterface::SESSION_LIFETIME_KEY))
+      ->toBeSame(60);
   }
 }
