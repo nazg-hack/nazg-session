@@ -42,7 +42,6 @@ class CachePersistence implements SessionPersistenceInterface {
     private bool $cookieHttpOnly = false,
     private string $cookieSameSite = 'Lax'
   ) {
-
     $this->cacheLimiter = in_array($cacheLimiter, $this->supportedCacheLimiters, true)
         ? $cacheLimiter
         : 'nocache';
@@ -50,7 +49,6 @@ class CachePersistence implements SessionPersistenceInterface {
     $this->lastModified = $lastModified ? gmdate(self::HTTP_DATE_FORMAT, $lastModified)
       : $this->determineLastModifiedValue();
   }
-
 
   public function initializeSessionFromRequest(
     ServerRequestInterface $request
@@ -68,9 +66,8 @@ class CachePersistence implements SessionPersistenceInterface {
     if ($session is SessionIdentifierAwareInterface) {
       $id = $session->getId();
     }
-    // New session? No data? Nothing to do.
     if ('' === $id
-            && (dict[] === $session->toDict() || ! $session->hasChanged())
+      && (dict[] === $session->toDict() || ! $session->hasChanged())
     ) {
       return $response;
     }

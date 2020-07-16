@@ -29,7 +29,8 @@
     "hhvm/hacktest": "^2.0",
     "hhvm/hhast": "^4.0",
     "nazg/hcache": "^0.6.1",
-    "ytake/hack-cookie": "^0.1.1"
+    "ytake/hack-cookie": "^0.1.1",
+    "ytake/hungrr": "^0.13.2"
   },
   "autoload": {
     "psr-4": {
