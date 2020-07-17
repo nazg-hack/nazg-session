@@ -45,4 +45,33 @@ final class LazySessionTest extends HackTest {
     );
     expect($lazy->getId())->toBeEmpty();
   }
+
+  public async function testShouldReturnFalseRegenarated(): Awaitable<void> {
+    $request = ServerRequestFactory::fromGlobals();
+    $lazy = new LazySession(
+      new CachePersistence(new MapCache(), 'hello'),
+      $request
+    );
+    expect($lazy->isRegenerated())->toBeFalse();
+  }
+
+  public async function testShouldReturnRegenarated(): Awaitable<void> {
+    $request = ServerRequestFactory::fromGlobals();
+    $lazy = new LazySession(
+      new CachePersistence(new MapCache(), 'hello'),
+      $request
+    );
+    $lazy->regenerate();
+    expect($lazy->isRegenerated())->toBeTrue();
+  }
+
+  public async function testShouldReturnDict(): Awaitable<void> {
+    $request = ServerRequestFactory::fromGlobals();
+    $lazy = new LazySession(
+      new CachePersistence(new MapCache(), 'hello'),
+      $request
+    );
+    $lazy->set('foo', 'bar');
+    expect($lazy->toDict())->toBeSame(dict['foo' => 'bar']);
+  }
 }

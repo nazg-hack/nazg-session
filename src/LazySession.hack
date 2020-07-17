@@ -9,7 +9,7 @@ final class LazySession implements
   SessionInterface,
   InitializeSessionIdInterface {
 
-  <<__LateInit>> private ?SessionInterface $proxiedSession;
+  private ?SessionInterface $proxiedSession = null;
 
   public function __construct(
     private SessionPersistenceInterface $persistence,
@@ -22,7 +22,7 @@ final class LazySession implements
   }
 
   public function isRegenerated(): bool {
-    if (!$this->proxiedSession) {
+    if ($this->proxiedSession is null) {
       return false;
     }
     return $this->proxiedSession->isRegenerated();
