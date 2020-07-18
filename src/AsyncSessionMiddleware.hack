@@ -18,9 +18,12 @@ class AsyncSessionMiddleware implements Server\AsyncMiddlewareInterface {
     Server\AsyncRequestHandlerInterface $handler
   ): Awaitable<ResponseInterface> {
     $session = new LazySession($this->persistence, $request);
+    if ($request is \Ytake\Extended\HttpMessage\ServerRequestInterface) {
+      $request = $request->withAttribute(self::SESSION_ATTRIBUTE, $session);
+    }
     $response = await $handler->handleAsync(
       $writeHandle,
-      $request->withServerParams(dict[self::SESSION_ATTRIBUTE => \serialize($session)])
+      $request
     );
     return await $this->persistence->persistSessionAsync($session, $response);
   }
